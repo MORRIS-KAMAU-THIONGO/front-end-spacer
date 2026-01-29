@@ -1,56 +1,65 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "./components/layout/Layout";
-import Landing from "./pages/Landing";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Spaces from "./pages/Spaces";
-import SpaceDetails from "./pages/SpaceDetails";
-import Booking from "./pages/Booking";
-import Dashboard from "./pages/Dashboard";
-import Admin from "./pages/Admin";
-import ProtectedRoute from "./features/auth/ProtectedRoute";
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import Layout from './components/layout/Layout'
+import ProtectedRoute from './features/auth/ProtectedRoute'
+
+// Pages
+import Landing from './pages/Landing'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Spaces from './pages/Spaces'
+import SpaceDetails from './pages/SpaceDetails'
+import Booking from './pages/Booking'
+import Dashboard from './pages/Dashboard'
+import Admin from './pages/Admin'
 
 function App() {
+  const { isAuthenticated } = useSelector(state => state.auth)
+
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/spaces" element={<Spaces />} />
-          <Route path="/spaces/:id" element={<SpaceDetails />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Layout><Landing /></Layout>} />
+        <Route path="/login" element={!isAuthenticated ? <Layout><Login /></Layout> : <Navigate to="/" />} />
+        <Route path="/register" element={!isAuthenticated ? <Layout><Register /></Layout> : <Navigate to="/" />} />
 
-          <Route
-            path="/booking/:id"
-            element={
-              <ProtectedRoute>
-                <Booking />
-              </ProtectedRoute>
-            }
-          />
+        {/* Space Routes */}
+        <Route path="/spaces" element={<Layout><Spaces /></Layout>} />
+        <Route path="/spaces/:id" element={<Layout><SpaceDetails /></Layout>} />
 
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Layout><Dashboard /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/booking"
+          element={
+            <ProtectedRoute>
+              <Layout><Booking /></Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Layout><Admin /></Layout>
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute adminOnly>
-                <Admin />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Layout>
+        {/* 404 */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

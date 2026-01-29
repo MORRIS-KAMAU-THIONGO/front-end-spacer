@@ -1,8 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './rootReducer';
+import { configureStore } from '@reduxjs/toolkit'
+import authReducer from '../features/auth/authSlice'
+import spacesReducer from '../features/spaces/spacesSlice'
+import bookingsReducer from '../features/bookings/bookingsSlice'
 
-const store = configureStore({
-  reducer: rootReducer,
-});
-
-export default store;
+export default configureStore({
+  reducer: {
+    auth: authReducer,
+    spaces: spacesReducer,
+    bookings: bookingsReducer
+  },
+})
