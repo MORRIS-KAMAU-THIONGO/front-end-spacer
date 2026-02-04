@@ -29,8 +29,8 @@ const Hero = ({ onGetStartedClick }) => {
             Find Your Perfect
             <span className="block text-cta-400">Workspace</span>
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-gray-100">
-            Discover and book premium workspaces, meeting rooms, and event spaces in your city. Work smarter, not harder.
+          <p className="lead mb-8 max-w-3xl mx-auto">
+            Discover and book premium workspaces, meeting rooms, and event spaces in Nairobi. Work smarter, not harder.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button

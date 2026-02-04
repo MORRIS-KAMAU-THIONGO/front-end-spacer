@@ -4,7 +4,7 @@ import placeholderImage from '../assets/images/placeholder.svg';
 const SpaceCard = ({ space, onBookClick }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow relative">
-      <div className="h-48 bg-gray-300 flex items-center justify-center overflow-hidden relative">
+      <div className="h-56 lg:h-64 bg-gray-300 flex items-center justify-center overflow-hidden relative">
         <img 
           src={space.image || placeholderImage} 
           alt={space.name}
@@ -18,6 +18,14 @@ const SpaceCard = ({ space, onBookClick }) => {
           <span>{space.rating}</span>
         </div>
       </div>
+      
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2 truncate">{space.name}</h3>
+        <div className="flex items-center text-gray-600 mb-2">
+          <FiMapPin className="mr-1" />
+          <span className="text-sm truncate">{space.location}</span>
+        </div>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{space.description}</p>
       
       <div className="p-6">
         <h3 className="text-xl font-semibold mb-2">{space.name}</h3>

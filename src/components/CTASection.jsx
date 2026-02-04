@@ -14,11 +14,11 @@ const CTASection = ({ onGetStartedClick }) => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={onGetStartedClick}
-            className="bg-yellow-400 text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-yellow-300 flex items-center justify-center"
+            className="bg-gradient-to-r from-cta-500 to-yellow-400 text-gray-900 px-8 py-3 rounded-full font-semibold hover:from-cta-600 hover:to-yellow-300 flex items-center justify-center shadow-lg"
           >
             Get Started Now <FiArrowRight className="ml-2" />
           </button>
-          <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900">
+          <button className="border-2 border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition">
             Contact Sales
           </button>
         </div>
