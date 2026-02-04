@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const StatsCounter = ({ end, label, duration = 2000 }) => {
+const StatsCounter = ({ end, label, duration = 2000, className = '' }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -19,9 +19,9 @@ const StatsCounter = ({ end, label, duration = 2000 }) => {
   }, [end, duration]);
 
   return (
-    <div className="text-center">
-      <div className="text-4xl font-bold text-blue-600 mb-2">{count}+</div>
-      <div className="text-gray-600">{label}</div>
+    <div className={`text-center ${className}`}>
+      <div className="text-3xl md:text-4xl font-extrabold text-white mb-1">{count}</div>
+      <div className="text-sm md:text-base text-white/90 uppercase tracking-wide">{label}</div>
     </div>
   );
 };

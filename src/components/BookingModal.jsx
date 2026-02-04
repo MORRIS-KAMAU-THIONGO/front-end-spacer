@@ -66,14 +66,14 @@ const BookingModal = ({ isOpen, onClose, space }) => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Date</label>
+            <label className="form-label">Date</label>
             <div className="relative">
               <FiCalendar className="absolute left-3 top-3 text-gray-400" />
               <input
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({...formData, date: e.target.value})}
-                className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="form-input pl-10"
                 required
               />
             </div>
@@ -81,27 +81,27 @@ const BookingModal = ({ isOpen, onClose, space }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Start Time</label>
+              <label className="form-label">Start Time</label>
               <div className="relative">
                 <FiClock className="absolute left-3 top-3 text-gray-400" />
                 <input
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => setFormData({...formData, startTime: e.target.value})}
-                  className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="form-input pl-10"
                   required
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">End Time</label>
+              <label className="form-label">End Time</label>
               <div className="relative">
                 <FiClock className="absolute left-3 top-3 text-gray-400" />
                 <input
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => setFormData({...formData, endTime: e.target.value})}
-                  className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="form-input pl-10"
                   required
                 />
               </div>
@@ -109,20 +109,23 @@ const BookingModal = ({ isOpen, onClose, space }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Purpose</label>
+            <label className="form-label">Purpose</label>
             <textarea
               value={formData.purpose}
               onChange={(e) => setFormData({...formData, purpose: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="form-input h-24"
               rows="3"
               placeholder="Meeting, workshop, etc."
             />
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <div className="flex justify-between">
-              <span>Total Price:</span>
-              <span className="font-semibold">${calculatePrice()}</span>
+          <div className="bg-gradient-to-r from-gray-50 to-white p-3 rounded-lg border border-gray-100">
+            <div className="flex justify-between items-center">
+              <div>
+                <div className="text-sm text-gray-500">Total Price</div>
+                <div className="text-lg font-semibold">${calculatePrice()}</div>
+              </div>
+              <div className="text-sm text-gray-400">Price calculated based on duration</div>
             </div>
           </div>
 
@@ -137,7 +140,7 @@ const BookingModal = ({ isOpen, onClose, space }) => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 btn-primary"
             >
               {loading ? 'Booking...' : 'Book Now'}
             </button>

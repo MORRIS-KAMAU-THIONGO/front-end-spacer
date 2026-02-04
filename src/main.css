@@ -24,6 +24,16 @@
   .hero-title {
     text-wrap: balance;
   }
+
+  /* Category card subtle hover */
+  .category-card:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Modal backdrop polish */
+  .modal-backdrop {
+    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+  }
 }
 
 @layer components {

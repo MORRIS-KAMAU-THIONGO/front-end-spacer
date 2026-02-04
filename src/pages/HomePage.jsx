@@ -104,12 +104,12 @@ const HomePage = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Browse by Category</h2>
             <p className="text-xl text-gray-600">Find the perfect space for your needs</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {categories.map((category, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center">
-                <div className="text-blue-600 text-3xl mb-3 flex justify-center">{category.icon}</div>
+              <div key={index} className="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1 cursor-pointer text-center">
+                <div className="w-16 h-16 rounded-full bg-gray-100 mx-auto flex items-center justify-center text-blue-600 text-2xl mb-3">{category.icon}</div>
                 <h3 className="font-semibold text-gray-900 mb-1">{category.name}</h3>
-                <p className="text-sm text-gray-600">{category.count} spaces</p>
+                <p className="text-sm text-gray-500">{category.count} spaces</p>
               </div>
             ))}
           </div>
