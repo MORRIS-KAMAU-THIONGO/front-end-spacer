@@ -24,21 +24,14 @@ export const Navbar = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
             <Link to="/" className="text-gray-700 hover:text-primary transition">
-              Home
+              Features
             </Link>
-            <Link to="/spaces" className="text-gray-700 hover:text-primary transition">
-              Spaces
+            <Link to="/" className="text-gray-700 hover:text-primary transition">
+              How It Works
             </Link>
-            {isAuthenticated && user?.role === 'admin' && (
-              <Link to="/admin" className="text-gray-700 hover:text-primary transition">
-                Admin
-              </Link>
-            )}
-            {isAuthenticated && (
-              <Link to="/dashboard" className="text-gray-700 hover:text-primary transition">
-                Dashboard
-              </Link>
-            )}
+            <Link to="/" className="text-gray-700 hover:text-primary transition">
+              About
+            </Link>
           </div>
 
           {/* Auth Links */}
@@ -59,7 +52,7 @@ export const Navbar = () => {
                   Login
                 </Link>
                 <Link to="/register" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">
-                  Register
+                  Sign Up
                 </Link>
               </>
             )}
@@ -80,28 +73,21 @@ export const Navbar = () => {
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-2">
             <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-              Home
+              Features
             </Link>
-            <Link to="/spaces" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-              Spaces
+            <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+              How It Works
             </Link>
-            {isAuthenticated && user?.role === 'admin' && (
-              <Link to="/admin" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-                Admin
-              </Link>
-            )}
-            {isAuthenticated && (
-              <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-                Dashboard
-              </Link>
-            )}
+            <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+              About
+            </Link>
             {!isAuthenticated && (
               <>
                 <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
                   Login
                 </Link>
                 <Link to="/register" className="block px-4 py-2 bg-primary text-white rounded hover:bg-blue-600">
-                  Register
+                  Sign Up
                 </Link>
               </>
             )}
