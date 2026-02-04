@@ -5,6 +5,7 @@ import { updateBookingStatus, deleteBooking } from '../redux/bookingsSlice';
 import { addUser, updateUser, deleteUser, updateUserRole } from '../redux/usersSlice';
 import { FiPlus, FiEdit, FiTrash, FiUsers, FiMapPin, FiDollarSign, FiCalendar, FiBarChart } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import Sparkline from '../components/Sparkline';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -323,13 +324,20 @@ const AdminDashboard = () => {
                 <div className="space-y-3">
                   {popularSpaces.map((space) => (
                     <div key={space.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                      <div>
-                        <p className="font-medium">{space.name}</p>
-                        <p className="text-sm text-gray-600">{space.location}</p>
+                      <div className="min-w-0">
+                        <p className="font-medium truncate">{space.name}</p>
+                        <p className="text-sm text-gray-600 truncate">{space.location}</p>
                       </div>
-                      <div className="text-right">
+
+                      <div className="ml-4 w-48 text-right">
                         <p className="font-medium">{space.bookingCount} bookings</p>
-                        <p className="text-sm text-gray-600">${space.price}/hr</p>
+                        <p className="text-sm text-gray-600">${space.price}/{space.priceUnit || 'hr'}</p>
+                        <div className="mt-2">
+                          {/* sparkline: last 6 points simulated using bookingCount */}
+                          <div className="w-full">
+                            <Sparkline data={[Math.max(1, space.bookingCount - 2), Math.max(1, space.bookingCount - 1), space.bookingCount, Math.max(1, Math.floor(space.bookingCount * 0.8)), Math.max(1, Math.floor(space.bookingCount * 0.6)), Math.max(1, space.bookingCount - 3)]} color={'bg-cta-400'} height={20} />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
