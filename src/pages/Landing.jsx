@@ -26,6 +26,18 @@ export const Landing = () => {
               </Button>
             </Link>
           </div>
+          <div className="flex justify-center gap-4 mt-6 flex-wrap">
+            <Link to="/spaces">
+              <Button variant="outline" size="md" className="bg-white text-primary hover:bg-gray-100">
+                I'm a Client
+              </Button>
+            </Link>
+            <Link to="/admin">
+              <Button variant="secondary" size="md">
+                I'm a Space Owner
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
