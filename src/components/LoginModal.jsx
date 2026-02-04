@@ -71,14 +71,14 @@ const LoginModal = ({ isOpen, onClose }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div>
-              <label className="block text-sm font-medium mb-1">Name</label>
+              <label className="form-label">Name</label>
               <div className="relative">
                 <FiUser className="absolute left-3 top-3 text-gray-400" />
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="form-input pl-10"
                   placeholder="Your name"
                   required
                 />
@@ -87,14 +87,14 @@ const LoginModal = ({ isOpen, onClose }) => {
           )}
 
           <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+            <label className="form-label">Email</label>
             <div className="relative">
               <FiMail className="absolute left-3 top-3 text-gray-400" />
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="form-input pl-10"
                 placeholder="your@email.com"
                 required
               />
@@ -102,14 +102,14 @@ const LoginModal = ({ isOpen, onClose }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="form-label">Password</label>
             <div className="relative">
               <FiLock className="absolute left-3 top-3 text-gray-400" />
               <input
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="form-input pl-10"
                 placeholder="Your password"
                 required
               />
@@ -118,13 +118,13 @@ const LoginModal = ({ isOpen, onClose }) => {
 
           {!isLogin && (
             <div>
-              <label className="block text-sm font-medium mb-1">Role</label>
+              <label className="form-label">Role</label>
               <div className="relative">
                 <FiUserCheck className="absolute left-3 top-3 text-gray-400" />
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({...formData, role: e.target.value})}
-                  className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="form-input pl-10"
                 >
                   <option value="client">Client</option>
                   <option value="admin">Admin</option>
@@ -136,7 +136,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="w-full btn-primary"
           >
             {loading ? 'Processing...' : (isLogin ? 'Login' : 'Sign Up')}
           </button>

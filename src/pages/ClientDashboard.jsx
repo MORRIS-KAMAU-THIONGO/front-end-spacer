@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectSpacesByCategory, selectSpacesByLocation } from '../redux/spacesSlice';
 import { selectUserBookings } from '../redux/bookingsSlice';
 import SpaceCard from '../components/SpaceCard';
 import BookingModal from '../components/BookingModal';

@@ -3,8 +3,8 @@ import placeholderImage from '../assets/images/placeholder.svg';
 
 const SpaceCard = ({ space, onBookClick }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-      <div className="h-48 bg-gray-300 flex items-center justify-center overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow relative">
+      <div className="h-48 bg-gray-300 flex items-center justify-center overflow-hidden relative">
         <img 
           src={space.image || placeholderImage} 
           alt={space.name}
@@ -13,6 +13,10 @@ const SpaceCard = ({ space, onBookClick }) => {
             e.target.src = placeholderImage;
           }}
         />
+        <div className="absolute right-3 top-3 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-medium flex items-center shadow">
+          <svg className="w-4 h-4 text-yellow-400 mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.96a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.96c.3.921-.755 1.688-1.538 1.118l-3.37-2.448a1 1 0 00-1.176 0L5.28 18.46c-.783.57-1.838-.197-1.539-1.118l1.287-3.96a1 1 0 00-.364-1.118L1.295 9.515C.512 8.945.914 7.705 1.883 7.705h4.162a1 1 0 00.95-.69l1.286-3.96z"/></svg>
+          <span>{space.rating}</span>
+        </div>
       </div>
       
       <div className="p-6">
@@ -36,11 +40,11 @@ const SpaceCard = ({ space, onBookClick }) => {
         <div className="flex items-center justify-between">
           <div>
             <span className="text-2xl font-bold text-blue-600">${space.price}</span>
-            <span className="text-gray-600">/hour</span>
+            <span className="text-gray-600">/{space.priceUnit || 'hour'}</span>
           </div>
           <button
             onClick={() => onBookClick(space)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-gradient-to-r from-cta-500 to-yellow-400 text-gray-900 px-4 py-2 rounded-full font-semibold hover:opacity-95 shadow"
           >
             Book Now
           </button>
