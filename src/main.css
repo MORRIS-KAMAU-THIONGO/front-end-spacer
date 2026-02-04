@@ -15,6 +15,15 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Hero background pattern (subtle) */
+  .bg-hero-pattern {
+    background-image: linear-gradient(135deg, rgba(2,132,199,0.9) 0%, rgba(208,77,224,0.85) 60%), radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03), transparent 20%);
+  }
+
+  .hero-title {
+    text-wrap: balance;
+  }
 }
 
 @layer components {
