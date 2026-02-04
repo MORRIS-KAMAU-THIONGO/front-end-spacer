@@ -9,6 +9,7 @@ import CTASection from '../components/CTASection';
 import BookingModal from '../components/BookingModal';
 import LoginModal from '../components/LoginModal';
 import { FiSearch, FiShield, FiClock, FiMapPin, FiUsers, FiWifi, FiCoffee, FiMonitor, FiCamera, FiMic, FiTruck, FiHome } from 'react-icons/fi';
+import { selectCategories } from '../redux/spacesSlice';
 
 const HomePage = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -36,20 +37,14 @@ const HomePage = () => {
     }
   ];
 
-  const categories = [
-    { icon: <FiMonitor />, name: "Coworking Space", count: 45 },
-    { icon: <FiUsers />, name: "Meeting Room", count: 32 },
-    { icon: <FiCamera />, name: "Event Space", count: 28 },
-    { icon: <FiHome />, name: "Private Office", count: 19 },
-    { icon: <FiCoffee />, name: "Cafe Space", count: 15 },
-    { icon: <FiMic />, name: "Studio", count: 12 },
-    { icon: <FiWifi />, name: "Hot Desk", count: 38 },
-    { icon: <FiTruck />, name: "Workshop", count: 8 },
-    { icon: <FiMapPin />, name: "Outdoor Space", count: 6 },
-    { icon: <FiUsers />, name: "Conference Room", count: 22 },
-    { icon: <FiMonitor />, name: "Tech Hub", count: 14 },
-    { icon: <FiHome />, name: "Creative Space", count: 11 }
-  ];
+  // Use categories from the store so they reflect actual space categories and make tiles clickable
+  const storeCategories = useSelector(selectCategories);
+  const categories = storeCategories.slice(0, 12).map((name, idx) => ({
+    icon: <FiMonitor />,
+    name,
+    slug: name,
+    count: spaces.filter(s => s.category === name).length
+  }));
 
   const steps = [
     { number: "01", title: "Browse Spaces", description: "Explore our curated collection of workspaces" },
@@ -106,7 +101,7 @@ const HomePage = () => {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {categories.map((category, index) => (
-              <div key={index} className="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1 cursor-pointer text-center">
+              <div key={index} onClick={() => navigate(`/client-dashboard?category=${encodeURIComponent(category.slug)}`)} className="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1 cursor-pointer text-center">
                 <div className="w-16 h-16 rounded-full bg-gray-100 mx-auto flex items-center justify-center text-blue-600 text-2xl mb-3">{category.icon}</div>
                 <h3 className="font-semibold text-gray-900 mb-1">{category.name}</h3>
                 <p className="text-sm text-gray-500">{category.count} spaces</p>

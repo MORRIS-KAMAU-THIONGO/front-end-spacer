@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 import { selectUserBookings } from '../redux/bookingsSlice';
+import { selectCategories } from '../redux/spacesSlice';
 import SpaceCard from '../components/SpaceCard';
 import BookingModal from '../components/BookingModal';
 import { FiSearch, FiFilter, FiCalendar, FiMapPin, FiDollarSign, FiClock } from 'react-icons/fi';
@@ -14,12 +16,20 @@ const ClientDashboard = () => {
   const [selectedSpace, setSelectedSpace] = useState(null);
   const [activeTab, setActiveTab] = useState('browse');
 
+  const [searchParams] = useSearchParams();
+  const storeCategories = useSelector(selectCategories);
+
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat) setSelectedCategory(decodeURIComponent(cat));
+  }, [searchParams]);
+
   const dispatch = useDispatch();
   const { spaces } = useSelector(state => state.spaces);
   const { user } = useSelector(state => state.auth);
   const userBookings = useSelector(state => selectUserBookings(state, user?.id));
 
-  const categories = ['all', 'coworking', 'meeting-room', 'event-space', 'private-office', 'studio'];
+  const categories = ['all', ...storeCategories];
   const locations = ['all', 'downtown', 'midtown', 'uptown', 'suburbs'];
   const priceRanges = ['all', '0-50', '51-100', '101-200', '200+'];
 
@@ -141,23 +151,10 @@ const ClientDashboard = () => {
                   <option value="all">All Prices</option>
                   {priceRanges.slice(1).map(range => (
                     <option key={range} value={range}>
-                      ${range}/hour
+                      {`KSh ${range}/hour`}
                     </option>
                   ))}
                 </select>
-
-                {/* Clear Filters */}
-                <button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedCategory('all');
-                    setSelectedLocation('all');
-                    setPriceRange('all');
-                  }}
-                  className="px-4 py-2 btn-secondary"
-                >
-                  Clear Filters
-                </button>
               </div>
             </div>
 
@@ -261,7 +258,7 @@ const ClientDashboard = () => {
                           </div>
                           <div className="flex items-center">
                             <FiDollarSign className="mr-2" />
-                            <span>${booking.totalPrice}</span>
+                            <span>KSh {Number(booking.totalPrice).toLocaleString('en-KE')}</span>
                           </div>
                         </div>
                         <div className="mt-4">
