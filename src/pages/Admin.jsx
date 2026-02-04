@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import * as adminService from '../features/admin/adminService'
 
 export const Admin = () => {
   const { user } = useSelector(state => state.auth)
@@ -97,6 +98,40 @@ export const Admin = () => {
           <li>Space owner role (separate from admin)</li>
           <li>Downloadable PDF invoices</li>
         </ul>
+      </section>
+      
+      <section className="mt-8">
+        <h2 className="text-2xl font-semibold mb-2">Quick Actions (Admin)</h2>
+        <div className="flex gap-3 flex-wrap">
+          <button
+            onClick={async () => {
+              try {
+                const stats = await adminService.getDashboardStats()
+                // simple alert for now
+                alert(JSON.stringify(stats))
+              } catch (e) {
+                alert('Unable to fetch stats')
+              }
+            }}
+            className="px-4 py-2 bg-primary text-white rounded"
+          >
+            Load Stats
+          </button>
+
+          <button
+            onClick={async () => {
+              try {
+                const spaces = await adminService.getAllSpaces()
+                alert(`Spaces: ${Array.isArray(spaces) ? spaces.length : 'n/a'}`)
+              } catch (e) {
+                alert('Unable to load spaces')
+              }
+            }}
+            className="px-4 py-2 bg-white border rounded"
+          >
+            Load Spaces
+          </button>
+        </div>
       </section>
     </div>
   )
