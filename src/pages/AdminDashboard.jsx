@@ -256,40 +256,40 @@ const AdminDashboard = () => {
           <div className="space-y-8">
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center">
-                  <FiMapPin className="text-blue-600 text-2xl mr-3" />
-                  <div>
-                    <p className="text-sm text-gray-600">Total Spaces</p>
-                    <p className="text-2xl font-bold">{totalSpaces}</p>
-                  </div>
+              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-cta-50 flex items-center justify-center text-2xl text-cta-600">
+                  <FiMapPin />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Spaces</p>
+                  <p className="text-3xl font-extrabold text-gray-900">{totalSpaces}</p>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center">
-                  <FiCalendar className="text-green-600 text-2xl mr-3" />
-                  <div>
-                    <p className="text-sm text-gray-600">Total Bookings</p>
-                    <p className="text-2xl font-bold">{totalBookings}</p>
-                  </div>
+              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center text-2xl text-green-600">
+                  <FiCalendar />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Bookings</p>
+                  <p className="text-3xl font-extrabold text-gray-900">{totalBookings}</p>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center">
-                  <FiUsers className="text-purple-600 text-2xl mr-3" />
-                  <div>
-                    <p className="text-sm text-gray-600">Total Users</p>
-                    <p className="text-2xl font-bold">{totalUsers}</p>
-                  </div>
+              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center text-2xl text-purple-600">
+                  <FiUsers />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Users</p>
+                  <p className="text-3xl font-extrabold text-gray-900">{totalUsers}</p>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center">
-                  <FiDollarSign className="text-yellow-600 text-2xl mr-3" />
-                  <div>
-                    <p className="text-sm text-gray-600">Total Revenue</p>
-                    <p className="text-2xl font-bold">${totalRevenue}</p>
-                  </div>
+              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+                <div className="w-12 h-12 rounded-lg bg-yellow-50 flex items-center justify-center text-2xl text-yellow-600">
+                  <FiDollarSign />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Revenue</p>
+                  <p className="text-3xl font-extrabold text-gray-900">${totalRevenue}</p>
                 </div>
               </div>
             </div>
@@ -354,42 +354,44 @@ const AdminDashboard = () => {
 
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 border-b">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Location</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {spaces.map((space) => (
-                    <tr key={space.id}>
+                    <tr key={space.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap font-medium">{space.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-600">{space.location}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-600 capitalize">
                         {space.category.replace('-', ' ')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">${space.price}/hr</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">${space.price}/{space.priceUnit || 'hr'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                         <button
                           onClick={() => {
                             setEditingSpace(space);
                             setShowSpaceModal(true);
                           }}
-                          className="text-blue-600 hover:text-blue-800 mr-3"
+                          className="p-2 rounded hover:bg-gray-100"
+                          aria-label={`Edit ${space.name}`}
                         >
-                          <FiEdit />
+                          <FiEdit className="text-blue-600" />
                         </button>
                         <button
                           onClick={() => {
                             dispatch(deleteSpace(space.id));
                             toast.success('Space deleted successfully');
                           }}
-                          className="text-red-600 hover:text-red-800"
+                          className="p-2 rounded hover:bg-red-50"
+                          aria-label={`Delete ${space.name}`}
                         >
-                          <FiTrash />
+                          <FiTrash className="text-red-600" />
                         </button>
                       </td>
                     </tr>

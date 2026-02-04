@@ -100,7 +100,7 @@ const ClientDashboard = () => {
                     placeholder="Search spaces..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="form-input pl-10"
                   />
                 </div>
 
@@ -108,7 +108,7 @@ const ClientDashboard = () => {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="form-input"
                 >
                   <option value="all">All Categories</option>
                   {categories.slice(1).map(cat => (
@@ -122,7 +122,7 @@ const ClientDashboard = () => {
                 <select
                   value={selectedLocation}
                   onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="form-input"
                 >
                   <option value="all">All Locations</option>
                   {locations.slice(1).map(loc => (
@@ -136,7 +136,7 @@ const ClientDashboard = () => {
                 <select
                   value={priceRange}
                   onChange={(e) => setPriceRange(e.target.value)}
-                  className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="form-input"
                 >
                   <option value="all">All Prices</option>
                   {priceRanges.slice(1).map(range => (
@@ -154,7 +154,7 @@ const ClientDashboard = () => {
                     setSelectedLocation('all');
                     setPriceRange('all');
                   }}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                  className="px-4 py-2 btn-secondary"
                 >
                   Clear Filters
                 </button>
