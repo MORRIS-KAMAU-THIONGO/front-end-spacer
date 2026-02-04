@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/authSlice';
 import { FiMenu, FiX, FiUser } from 'react-icons/fi';
@@ -22,10 +23,17 @@ const Navbar = ({ onLoginClick }) => {
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-blue-600">Home</a>
+            <NavLink to="/" className={({isActive})=> isActive ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}>Home</NavLink>
             <a href="#spaces" className="text-gray-700 hover:text-blue-600">Spaces</a>
             <a href="#about" className="text-gray-700 hover:text-blue-600">About</a>
-            
+
+            {isAuthenticated && user?.role === 'client' && (
+              <NavLink to="/client-dashboard" className={({isActive})=> isActive ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}>My Dashboard</NavLink>
+            )}
+            {isAuthenticated && user?.role === 'admin' && (
+              <NavLink to="/admin-dashboard" className={({isActive})=> isActive ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}>Admin</NavLink>
+            )}
+
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <span className="text-gray-700">Hi, {user?.name}</span>
@@ -57,19 +65,27 @@ const Navbar = ({ onLoginClick }) => {
       {isOpen && (
         <div className="md:hidden bg-white border-t">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <a href="#home" className="block px-3 py-2 text-gray-700">Home</a>
-            <a href="#spaces" className="block px-3 py-2 text-gray-700">Spaces</a>
-            <a href="#about" className="block px-3 py-2 text-gray-700">About</a>
+            <NavLink to="/" onClick={() => setIsOpen(false)} className={({isActive})=> isActive ? 'block px-3 py-2 text-blue-600' : 'block px-3 py-2 text-gray-700'}>Home</NavLink>
+            <a href="#spaces" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700">Spaces</a>
+            <a href="#about" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700">About</a>
+
+            {isAuthenticated && user?.role === 'client' && (
+              <NavLink to="/client-dashboard" onClick={() => setIsOpen(false)} className={({isActive})=> isActive ? 'block px-3 py-2 text-blue-600' : 'block px-3 py-2 text-gray-700'}>My Dashboard</NavLink>
+            )}
+            {isAuthenticated && user?.role === 'admin' && (
+              <NavLink to="/admin-dashboard" onClick={() => setIsOpen(false)} className={({isActive})=> isActive ? 'block px-3 py-2 text-blue-600' : 'block px-3 py-2 text-gray-700'}>Admin</NavLink>
+            )}
+
             {isAuthenticated ? (
               <button
-                onClick={handleLogout}
+                onClick={() => { handleLogout(); setIsOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-red-600"
               >
                 Logout
               </button>
             ) : (
               <button
-                onClick={onLoginClick}
+                onClick={() => { onLoginClick(); setIsOpen(false); }}
                 className="block w-full text-left px-3 py-2 text-blue-600"
               >
                 Login

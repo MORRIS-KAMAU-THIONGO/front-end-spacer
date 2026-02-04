@@ -9,11 +9,38 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-DrVmsG2w.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CGx3LfPi.css">
+    <script type="module" crossorigin src="/assets/index-C_TOcgMx.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-ClUOAtmi.css">
   </head>
   <body>
     <div id="root"></div>
+
+    <script>
+      // Show runtime errors in-page to avoid a white blank screen and help debugging
+      window.addEventListener('error', function (e) {
+        try {
+          const root = document.getElementById('root');
+          if (root) {
+            root.innerHTML = '<div style="padding:24px;font-family:Inter,system-ui,Arial"><h2 style="color:#e11d48">An error occurred</h2><pre style="white-space:pre-wrap">' + (e && e.message ? e.message : String(e)) + '</pre></div>';
+          }
+        } catch (err) {
+          // ignore
+        }
+      });
+
+      window.addEventListener('unhandledrejection', function (e) {
+        try {
+          const root = document.getElementById('root');
+          if (root) {
+            const reason = e && e.reason ? (e.reason.message || String(e.reason)) : 'Unknown reason';
+            root.innerHTML = '<div style="padding:24px;font-family:Inter,system-ui,Arial"><h2 style="color:#e11d48">Unhandled promise rejection</h2><pre style="white-space:pre-wrap">' + reason + '</pre></div>';
+          }
+        } catch (err) {
+          // ignore
+        }
+      });
+    </script>
+
   </body>
 </html>
 

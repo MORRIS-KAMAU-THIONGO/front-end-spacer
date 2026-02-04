@@ -12,6 +12,33 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <script>
+      // Show runtime errors in-page to avoid a white blank screen and help debugging
+      window.addEventListener('error', function (e) {
+        try {
+          const root = document.getElementById('root');
+          if (root) {
+            root.innerHTML = '<div style="padding:24px;font-family:Inter,system-ui,Arial"><h2 style="color:#e11d48">An error occurred</h2><pre style="white-space:pre-wrap">' + (e && e.message ? e.message : String(e)) + '</pre></div>';
+          }
+        } catch (err) {
+          // ignore
+        }
+      });
+
+      window.addEventListener('unhandledrejection', function (e) {
+        try {
+          const root = document.getElementById('root');
+          if (root) {
+            const reason = e && e.reason ? (e.reason.message || String(e.reason)) : 'Unknown reason';
+            root.innerHTML = '<div style="padding:24px;font-family:Inter,system-ui,Arial"><h2 style="color:#e11d48">Unhandled promise rejection</h2><pre style="white-space:pre-wrap">' + reason + '</pre></div>';
+          }
+        } catch (err) {
+          // ignore
+        }
+      });
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
