@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addSpace, updateSpace, deleteSpace } from '../redux/spacesSlice';
 import { updateBookingStatus, deleteBooking } from '../redux/bookingsSlice';
 import { addUser, updateUser, deleteUser, updateUserRole } from '../redux/usersSlice';
-import { FiPlus, FiEdit, FiTrash, FiUsers, FiMapPin, FiDollarSign, FiCalendar, FiBarChart3 } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash, FiUsers, FiMapPin, FiDollarSign, FiCalendar, FiBarChart } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
 const AdminDashboard = () => {
