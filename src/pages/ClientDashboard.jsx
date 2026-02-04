@@ -219,7 +219,7 @@ const ClientDashboard = () => {
                           </div>
                           <div className="flex items-center">
                             <FiDollarSign className="mr-2" />
-                            <span>${booking.totalPrice}</span>
+                            <span>KSh {Number(booking.totalPrice).toLocaleString('en-KE')}</span>ce).toLocaleString('en-KE')}</span>
                           </div>
                         </div>
                         <div className="mt-4">

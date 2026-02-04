@@ -290,7 +290,7 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Total Revenue</p>
-                  <p className="text-3xl font-extrabold text-gray-900">${totalRevenue}</p>
+                    <p className="text-3xl font-extrabold text-gray-900">KSh {Number(totalRevenue).toLocaleString('en-KE')}</p>
                 </div>
               </div>
             </div>
@@ -310,7 +310,7 @@ const AdminDashboard = () => {
                           <p className="text-sm text-gray-600">{user?.name}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">${booking.totalPrice}</p>
+                          <p className="font-medium">KSh {Number(booking.totalPrice).toLocaleString('en-KE')}</p>
                           <p className="text-sm text-gray-600">{new Date(booking.date).toLocaleDateString()}</p>
                         </div>
                       </div>
@@ -331,7 +331,7 @@ const AdminDashboard = () => {
 
                       <div className="ml-4 w-48 text-right">
                         <p className="font-medium">{space.bookingCount} bookings</p>
-                        <p className="text-sm text-gray-600">${space.price}/{space.priceUnit || 'hr'}</p>
+                        <p className="text-sm text-gray-600">KSh {Number(space.price).toLocaleString('en-KE')}/{space.priceUnit || 'hr'}</p>
                         <div className="mt-2">
                           {/* sparkline: last 6 points simulated using bookingCount */}
                           <div className="w-full">
@@ -379,7 +379,7 @@ const AdminDashboard = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-gray-600 capitalize">
                         {space.category.replace('-', ' ')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">${space.price}/{space.priceUnit || 'hr'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">KSh {Number(space.price).toLocaleString('en-KE')}/{space.priceUnit || 'hr'}</td>
                       <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                         <button
                           onClick={() => {
@@ -441,7 +441,7 @@ const AdminDashboard = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-gray-600">
                           {booking.startTime} - {booking.endTime}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">${booking.totalPrice}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">KSh {Number(booking.totalPrice).toLocaleString('en-KE')}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <select
                             value={booking.status}
@@ -520,7 +520,7 @@ const AdminDashboard = () => {
                         </select>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-600">{user.totalBookings || 0}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">${user.totalSpent || 0}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">KSh {Number(user.totalSpent || 0).toLocaleString('en-KE')}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => {
