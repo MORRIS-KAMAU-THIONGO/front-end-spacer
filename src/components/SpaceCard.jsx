@@ -26,14 +26,7 @@ const SpaceCard = ({ space, onBookClick }) => {
           <span className="text-sm truncate">{space.location}</span>
         </div>
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">{space.description}</p>
-      
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{space.name}</h3>
-        <div className="flex items-center text-gray-600 mb-2">
-          <FiMapPin className="mr-1" />
-          <span className="text-sm">{space.location}</span>
-        </div>
-        
+
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center text-gray-600">
             <FiUsers className="mr-1" />
@@ -44,11 +37,11 @@ const SpaceCard = ({ space, onBookClick }) => {
             <span className="text-sm">WiFi</span>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div>
             <span className="text-2xl font-bold text-blue-600">KSh {Number(space.price).toLocaleString('en-KE')}</span>
-            <span className="text-gray-600">/{space.priceUnit || 'hour'}</span>
+            <span className="text-gray-600">{`/${space.priceUnit || 'hour'}`}</span>
           </div>
           <button
             onClick={() => onBookClick(space)}
