@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/authSlice';
 import { FiMenu, FiX, FiUser } from 'react-icons/fi';
@@ -9,8 +9,34 @@ const Navbar = ({ onLoginClick }) => {
   const { user, isAuthenticated } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleLogout = () => {
     dispatch(logout());
+    setIsOpen(false);
+  };
+
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    // if element not on current page, navigate home then scroll after short delay
+    navigate('/');
+    setTimeout(() => {
+      const e = document.getElementById(id);
+      if (e) e.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+  };
+
+  const goHomeAndScrollTop = () => {
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
+    }
     setIsOpen(false);
   };
 
@@ -23,9 +49,9 @@ const Navbar = ({ onLoginClick }) => {
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <NavLink to="/" className={({isActive})=> isActive ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}>Home</NavLink>
-            <a href="#spaces" className="text-gray-700 hover:text-blue-600">Spaces</a>
-            <a href="#about" className="text-gray-700 hover:text-blue-600">About</a>
+            <NavLink to="/" onClick={goHomeAndScrollTop} className={({isActive})=> isActive ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}>Home</NavLink>
+            <button onClick={() => scrollToSection('spaces')} className="text-gray-700 hover:text-blue-600">Spaces</button>
+            <button onClick={() => scrollToSection('about')} className="text-gray-700 hover:text-blue-600">About</button>
 
             {isAuthenticated && user?.role === 'client' && (
               <NavLink to="/client-dashboard" className={({isActive})=> isActive ? 'text-blue-600 font-medium' : 'text-gray-700 hover:text-blue-600'}>My Dashboard</NavLink>
@@ -65,9 +91,9 @@ const Navbar = ({ onLoginClick }) => {
       {isOpen && (
         <div className="md:hidden bg-white border-t">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <NavLink to="/" onClick={() => setIsOpen(false)} className={({isActive})=> isActive ? 'block px-3 py-2 text-blue-600' : 'block px-3 py-2 text-gray-700'}>Home</NavLink>
-            <a href="#spaces" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700">Spaces</a>
-            <a href="#about" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700">About</a>
+            <NavLink to="/" onClick={() => { goHomeAndScrollTop(); }} className={({isActive})=> isActive ? 'block px-3 py-2 text-blue-600' : 'block px-3 py-2 text-gray-700'}>Home</NavLink>
+            <button onClick={() => { scrollToSection('spaces'); }} className="block px-3 py-2 text-gray-700">Spaces</button>
+            <button onClick={() => { scrollToSection('about'); }} className="block px-3 py-2 text-gray-700">About</button>
 
             {isAuthenticated && user?.role === 'client' && (
               <NavLink to="/client-dashboard" onClick={() => setIsOpen(false)} className={({isActive})=> isActive ? 'block px-3 py-2 text-blue-600' : 'block px-3 py-2 text-gray-700'}>My Dashboard</NavLink>

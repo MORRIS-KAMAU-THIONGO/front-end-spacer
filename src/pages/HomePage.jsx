@@ -78,7 +78,7 @@ const HomePage = () => {
       <Hero onGetStartedClick={handleGetStarted} />
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
+      <section id="home" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Spacer?</h2>
@@ -93,7 +93,7 @@ const HomePage = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16">
+      <section id="about" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Browse by Category</h2>
@@ -112,7 +112,7 @@ const HomePage = () => {
       </section>
 
       {/* Featured Spaces */}
-      <section className="py-16 bg-gray-50">
+      <section id="spaces" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Spaces</h2>
