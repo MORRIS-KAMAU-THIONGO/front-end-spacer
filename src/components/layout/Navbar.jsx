@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../features/auth/authSlice'
 
@@ -10,6 +10,23 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout())
+  }
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const navigateToSection = (id) => {
+    if (location.pathname !== '/') {
+      navigate('/')
+      // wait for landing to mount
+      setTimeout(() => {
+        const el = document.getElementById(id)
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    } else {
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
@@ -23,15 +40,15 @@ export const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-gray-700 hover:text-primary transition">
+            <button onClick={() => navigateToSection('features')} className="text-gray-700 hover:text-primary transition">
               Features
-            </Link>
-            <Link to="/" className="text-gray-700 hover:text-primary transition">
+            </button>
+            <button onClick={() => navigateToSection('how-it-works')} className="text-gray-700 hover:text-primary transition">
               How It Works
-            </Link>
-            <Link to="/" className="text-gray-700 hover:text-primary transition">
+            </button>
+            <button onClick={() => navigateToSection('about')} className="text-gray-700 hover:text-primary transition">
               About
-            </Link>
+            </button>
           </div>
 
           {/* Auth Links */}
@@ -48,12 +65,12 @@ export const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/login" className="px-4 py-2 text-primary hover:bg-blue-50 rounded-lg transition">
-                  Login
-                </Link>
-                <Link to="/register" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">
-                  Sign Up
-                </Link>
+                    <Link to="/login" className="px-4 py-2 text-primary hover:bg-blue-50 rounded-lg transition">
+                      Login
+                    </Link>
+                    <Link to="/register" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">
+                      Sign Up
+                    </Link>
               </>
             )}
           </div>
@@ -72,15 +89,15 @@ export const Navbar = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-2">
-            <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => { setMobileMenuOpen(false); navigateToSection('features') }} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded text-left w-full">
               Features
-            </Link>
-            <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            </button>
+            <button onClick={() => { setMobileMenuOpen(false); navigateToSection('how-it-works') }} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded text-left w-full">
               How It Works
-            </Link>
-            <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            </button>
+            <button onClick={() => { setMobileMenuOpen(false); navigateToSection('about') }} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded text-left w-full">
               About
-            </Link>
+            </button>
             {!isAuthenticated && (
               <>
                 <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">

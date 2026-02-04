@@ -40,7 +40,7 @@ export const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4 bg-light">
+      <section id="features" className="py-16 px-4 bg-light">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">Why Choose Spacer?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -98,6 +98,39 @@ export const Landing = () => {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="how-it-works" className="py-16 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-8 text-gray-900">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="font-semibold mb-2">1. Search</h3>
+              <p className="text-gray-600">Browse spaces by location, type, and price.</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="font-semibold mb-2">2. Select</h3>
+              <p className="text-gray-600">Choose the perfect space for your needs.</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="font-semibold mb-2">3. Book</h3>
+              <p className="text-gray-600">Secure your booking with instant confirmation.</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="font-semibold mb-2">4. Enjoy</h3>
+              <p className="text-gray-600">Show up and make great things happen.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="py-12 px-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">Spacer</h2>
+          <p className="text-gray-600">Kenya's leading marketplace for booking unique workspace and event venues. Trusted by businesses and individuals across Kenya.</p>
         </div>
       </section>
 
