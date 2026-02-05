@@ -92,7 +92,7 @@ const HomePage = () => {
       <Hero onGetStartedClick={handleGetStarted} />
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
+      <section id="features" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Spacer?</h2>
@@ -141,7 +141,7 @@ const HomePage = () => {
       </section>
 
       {/* How It Works */}
-      <section className="py-16">
+      <section id="how-it-works" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
@@ -172,6 +172,16 @@ const HomePage = () => {
               <div className="text-4xl font-bold text-white mb-2">24/7</div>
               <div className="text-white">Customer Support</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">About</h2>
+            <p className="text-xl text-gray-600">Spacer connects people with flexible, verified spaces across Nairobi — from coworking desks to event venues. We simplify discovery, booking and management so you can focus on your work.</p>
           </div>
         </div>
       </section>
