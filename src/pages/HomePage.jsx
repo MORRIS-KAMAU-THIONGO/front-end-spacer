@@ -37,25 +37,34 @@ const HomePage = () => {
   ];
 
   const categories = [
-    { icon: <FiMonitor />, name: "Coworking Space", count: 45 },
-    { icon: <FiUsers />, name: "Meeting Room", count: 32 },
-    { icon: <FiCamera />, name: "Event Space", count: 28 },
-    { icon: <FiHome />, name: "Private Office", count: 19 },
-    { icon: <FiCoffee />, name: "Cafe Space", count: 15 },
-    { icon: <FiMic />, name: "Studio", count: 12 },
-    { icon: <FiWifi />, name: "Hot Desk", count: 38 },
-    { icon: <FiTruck />, name: "Workshop", count: 8 },
-    { icon: <FiMapPin />, name: "Outdoor Space", count: 6 },
-    { icon: <FiUsers />, name: "Conference Room", count: 22 },
-    { icon: <FiMonitor />, name: "Tech Hub", count: 14 },
-    { icon: <FiHome />, name: "Creative Space", count: 11 }
+    { icon: <FiMonitor />, name: "Coworking Spaces", count: 45 },
+    { icon: <FiMonitor />, name: "Serviced Offices", count: 18 },
+    { icon: <FiMonitor />, name: "Hybrid Offices", count: 12 },
+    { icon: <FiUsers />, name: "Shared desks & hot desks", count: 38 },
+    { icon: <FiHome />, name: "Turnkey private offices", count: 9 },
+    { icon: <FiHome />, name: "Private Offices", count: 19 },
+    { icon: <FiMonitor />, name: "Class A Buildings", count: 7 },
+    { icon: <FiCamera />, name: "Creative Studios", count: 14 },
+    { icon: <FiUsers />, name: "Dedicated team spaces", count: 11 },
+    { icon: <FiMonitor />, name: "Premium office suites", count: 6 },
+    { icon: <FiHome />, name: "Lofts & open spaces", count: 5 },
+    { icon: <FiCoffee />, name: "Commercial Kitchens", count: 3 },
+    { icon: <FiMapPin />, name: "Retail Spaces", count: 8 },
+    { icon: <FiUsers />, name: "Meeting Rooms", count: 32 },
+    { icon: <FiUsers />, name: "Boardrooms & huddle rooms", count: 10 },
+    { icon: <FiMonitor />, name: "Conference Centers", count: 4 },
+    { icon: <FiTruck />, name: "Warehouse Space", count: 2 },
+    { icon: <FiHome />, name: "Office Suites", count: 9 },
+    { icon: <FiTruck />, name: "Large event venues", count: 3 },
+    { icon: <FiTruck />, name: "Industrial & storage", count: 1 },
+    { icon: <FiHome />, name: "Multi-room spaces", count: 6 }
   ];
 
   const steps = [
-    { number: "01", title: "Browse Spaces", description: "Explore our curated collection of workspaces" },
-    { number: "02", title: "Select & Book", description: "Choose your perfect space and book instantly" },
-    { number: "03", title: "Work & Create", description: "Focus on what matters in your ideal environment" },
-    { number: "04", title: "Rate & Review", description: "Share your experience to help others" }
+    { number: "01", title: "Search", description: "Browse spaces by location, type, and price" },
+    { number: "02", title: "Select", description: "Choose the perfect space for your needs" },
+    { number: "03", title: "Book", description: "Secure your booking with instant confirmation" },
+    { number: "04", title: "Enjoy", description: "Show up and make great things happen" }
   ];
 
   const handleGetStarted = () => {
@@ -155,11 +164,14 @@ const HomePage = () => {
       {/* Statistics */}
       <section className="py-16 bg-blue-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <StatsCounter end={500} label="Happy Clients" />
-            <StatsCounter end={150} label="Premium Spaces" />
-            <StatsCounter end={1200} label="Bookings Made" />
-            <StatsCounter end={50} label="Cities Covered" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center items-center">
+            <StatsCounter end={500} label="Available Spaces" />
+            <StatsCounter end={10000} label="Happy Clients" />
+            <StatsCounter end={15} label="Cities in Kenya" />
+            <div className="text-center">
+              <div className="text-4xl font-bold text-white mb-2">24/7</div>
+              <div className="text-white">Customer Support</div>
+            </div>
           </div>
         </div>
       </section>
