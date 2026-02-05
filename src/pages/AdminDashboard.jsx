@@ -1,37 +1,59 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../redux/authSlice';
 import { addSpace, updateSpace, deleteSpace } from '../redux/spacesSlice';
 import { updateBookingStatus, deleteBooking } from '../redux/bookingsSlice';
 import { addUser, updateUser, deleteUser, updateUserRole } from '../redux/usersSlice';
-import { FiPlus, FiEdit, FiTrash, FiUsers, FiMapPin, FiDollarSign, FiCalendar, FiBarChart } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash, FiUsers, FiMapPin, FiDollarSign, FiCalendar, FiBarChart, FiExternalLink, FiLogOut } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import Sparkline from '../components/Sparkline';
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('overview');
   const [showSpaceModal, setShowSpaceModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingSpace, setEditingSpace] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
+  const [viewAllSpaces, setViewAllSpaces] = useState(false);
+  const [viewAllUsers, setViewAllUsers] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { spaces } = useSelector(state => state.spaces);
   const { bookings } = useSelector(state => state.bookings);
   const { users } = useSelector(state => state.users);
+  const { user: currentUser } = useSelector(state => state.auth);
 
   const totalRevenue = bookings.reduce((sum, booking) => sum + booking.totalPrice, 0);
   const totalSpaces = spaces.length;
-  const totalBookings = bookings.length;
+  const activeSpaces = spaces.filter(s => s.status !== 'inactive').length;
+  const featuredSpaces = spaces.filter(s => s.featured).length;
+  const activeBookings = bookings.filter(b => b.status === 'confirmed').length;
   const totalUsers = users.filter(u => u.role === 'client').length;
+  const activeUsers = users.filter(u => u.role === 'client' && u.isActive !== false).length;
+  
+  // Calculate new spaces this month
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  const newSpacesThisMonth = spaces.filter(space => {
+    if (!space.createdAt) return false;
+    const createdDate = new Date(space.createdAt);
+    return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
+  }).length;
 
-  const recentBookings = bookings.slice(-5).reverse();
-  const popularSpaces = spaces
-    .map(space => ({
-      ...space,
-      bookingCount: bookings.filter(b => b.spaceId === space.id).length
-    }))
-    .sort((a, b) => b.bookingCount - a.bookingCount)
-    .slice(0, 5);
+  // Calculate new users this month
+  const newUsersThisMonth = users.filter(user => {
+    if (!user.createdAt || user.role !== 'client') return false;
+    const createdDate = new Date(user.createdAt);
+    return createdDate.getMonth() === currentMonth && createdDate.getFullYear() === currentYear;
+  }).length;
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success('Logged out successfully');
+    navigate('/');
+  };
 
   const SpaceModal = () => {
     const [formData, setFormData] = useState(editingSpace || {
@@ -222,145 +244,21 @@ const AdminDashboard = () => {
     );
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600 text-lg">Manage your spaces, bookings, and users</p>
-        </div>
-
-        {/* Tabs */}
-        <div className="mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8">
-              {['overview', 'spaces', 'bookings', 'users'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm capitalize ${
-                    activeTab === tab
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </nav>
+  const AllSpacesModal = () => {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="p-6 border-b flex justify-between items-center">
+            <h2 className="text-2xl font-bold">All Spaces</h2>
+            <button
+              onClick={() => setViewAllSpaces(false)}
+              className="text-gray-500 hover:text-gray-700 text-2xl"
+            >
+              ×
+            </button>
           </div>
-        </div>
-
-        {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <div className="space-y-8">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-cta-50 flex items-center justify-center text-2xl text-cta-600">
-                  <FiMapPin />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Total Spaces</p>
-                  <p className="text-3xl font-extrabold text-gray-900">{totalSpaces}</p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center text-2xl text-green-600">
-                  <FiCalendar />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Total Bookings</p>
-                  <p className="text-3xl font-extrabold text-gray-900">{totalBookings}</p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center text-2xl text-purple-600">
-                  <FiUsers />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Total Users</p>
-                  <p className="text-3xl font-extrabold text-gray-900">{totalUsers}</p>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
-                <div className="w-12 h-12 rounded-lg bg-yellow-50 flex items-center justify-center text-2xl text-yellow-600">
-                  <FiDollarSign />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Total Revenue</p>
-                    <p className="text-3xl font-extrabold text-gray-900">KSh {Number(totalRevenue).toLocaleString('en-KE')}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-lg font-semibold mb-4">Recent Bookings</h3>
-                <div className="space-y-3">
-                  {recentBookings.map((booking) => {
-                    const space = spaces.find(s => s.id === booking.spaceId);
-                    const user = users.find(u => u.id === booking.userId);
-                    return (
-                      <div key={booking.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                        <div>
-                          <p className="font-medium">{space?.name}</p>
-                          <p className="text-sm text-gray-600">{user?.name}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium">KSh {Number(booking.totalPrice).toLocaleString('en-KE')}</p>
-                          <p className="text-sm text-gray-600">{new Date(booking.date).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-lg font-semibold mb-4">Popular Spaces</h3>
-                <div className="space-y-3">
-                  {popularSpaces.map((space) => (
-                    <div key={space.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                      <div className="min-w-0">
-                        <p className="font-medium truncate">{space.name}</p>
-                        <p className="text-sm text-gray-600 truncate">{space.location}</p>
-                      </div>
-
-                      <div className="ml-4 w-48 text-right">
-                        <p className="font-medium">{space.bookingCount} bookings</p>
-                        <p className="text-sm text-gray-600">KSh {Number(space.price).toLocaleString('en-KE')}/{space.priceUnit || 'hr'}</p>
-                        <div className="mt-2">
-                          {/* sparkline: last 6 points simulated using bookingCount */}
-                          <div className="w-full">
-                            <Sparkline data={[Math.max(1, space.bookingCount - 2), Math.max(1, space.bookingCount - 1), space.bookingCount, Math.max(1, Math.floor(space.bookingCount * 0.8)), Math.max(1, Math.floor(space.bookingCount * 0.6)), Math.max(1, space.bookingCount - 3)]} color={'bg-cta-400'} height={20} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Spaces Tab */}
-        {activeTab === 'spaces' && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Manage Spaces</h2>
-              <button
-                onClick={() => setShowSpaceModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
-              >
-                <FiPlus className="mr-2" /> Add Space
-              </button>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="p-6 overflow-auto flex-1">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
@@ -368,6 +266,7 @@ const AdminDashboard = () => {
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Location</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Category</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
                     <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
                   </tr>
                 </thead>
@@ -379,11 +278,19 @@ const AdminDashboard = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-gray-600 capitalize">
                         {space.category.replace('-', ' ')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">KSh {Number(space.price).toLocaleString('en-KE')}/{space.priceUnit || 'hr'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">KES {space.price}/{space.priceUnit || 'hr'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          space.status === 'inactive' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                        }`}>
+                          {space.status === 'inactive' ? 'Inactive' : 'Active'}
+                        </span>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                         <button
                           onClick={() => {
                             setEditingSpace(space);
+                            setViewAllSpaces(false);
                             setShowSpaceModal(true);
                           }}
                           className="p-2 rounded hover:bg-gray-100"
@@ -393,8 +300,10 @@ const AdminDashboard = () => {
                         </button>
                         <button
                           onClick={() => {
-                            dispatch(deleteSpace(space.id));
-                            toast.success('Space deleted successfully');
+                            if (confirm(`Are you sure you want to delete ${space.name}?`)) {
+                              dispatch(deleteSpace(space.id));
+                              toast.success('Space deleted successfully');
+                            }
                           }}
                           className="p-2 rounded hover:bg-red-50"
                           aria-label={`Delete ${space.name}`}
@@ -408,102 +317,40 @@ const AdminDashboard = () => {
               </table>
             </div>
           </div>
-        )}
+        </div>
+      </div>
+    );
+  };
 
-        {/* Bookings Tab */}
-        {activeTab === 'bookings' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-6">Manage Bookings</h2>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Space</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {bookings.map((booking) => {
-                    const space = spaces.find(s => s.id === booking.spaceId);
-                    const user = users.find(u => u.id === booking.userId);
-                    return (
-                      <tr key={booking.id}>
-                        <td className="px-6 py-4 whitespace-nowrap font-medium">{space?.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">{user?.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                          {new Date(booking.date).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                          {booking.startTime} - {booking.endTime}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">KSh {Number(booking.totalPrice).toLocaleString('en-KE')}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <select
-                            value={booking.status}
-                            onChange={(e) => {
-                              dispatch(updateBookingStatus({ id: booking.id, status: e.target.value }));
-                              toast.success('Booking status updated');
-                            }}
-                            className="px-2 py-1 border rounded text-sm"
-                          >
-                            <option value="pending">Pending</option>
-                            <option value="confirmed">Confirmed</option>
-                            <option value="cancelled">Cancelled</option>
-                          </select>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <button
-                            onClick={() => {
-                              dispatch(deleteBooking(booking.id));
-                              toast.success('Booking deleted successfully');
-                            }}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            <FiTrash />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+  const AllUsersModal = () => {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="p-6 border-b flex justify-between items-center">
+            <h2 className="text-2xl font-bold">All Users</h2>
+            <button
+              onClick={() => setViewAllUsers(false)}
+              className="text-gray-500 hover:text-gray-700 text-2xl"
+            >
+              ×
+            </button>
           </div>
-        )}
-
-        {/* Users Tab */}
-        {activeTab === 'users' && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Manage Users</h2>
-              <button
-                onClick={() => setShowUserModal(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center"
-              >
-                <FiPlus className="mr-2" /> Add User
-              </button>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="p-6 overflow-auto flex-1">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 border-b">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Bookings</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Spent</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Role</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Bookings</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Spent</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {users.map((user) => (
-                    <tr key={user.id}>
+                    <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap font-medium">{user.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-600">{user.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -520,25 +367,30 @@ const AdminDashboard = () => {
                         </select>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-gray-600">{user.totalBookings || 0}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">KSh {Number(user.totalSpent || 0).toLocaleString('en-KE')}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap text-gray-600">KES {user.totalSpent || 0}</td>
+                      <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                         <button
                           onClick={() => {
                             setEditingUser(user);
+                            setViewAllUsers(false);
                             setShowUserModal(true);
                           }}
-                          className="text-blue-600 hover:text-blue-800 mr-3"
+                          className="p-2 rounded hover:bg-gray-100"
+                          aria-label={`Edit ${user.name}`}
                         >
-                          <FiEdit />
+                          <FiEdit className="text-blue-600" />
                         </button>
                         <button
                           onClick={() => {
-                            dispatch(deleteUser(user.id));
-                            toast.success('User deleted successfully');
+                            if (confirm(`Are you sure you want to delete ${user.name}?`)) {
+                              dispatch(deleteUser(user.id));
+                              toast.success('User deleted successfully');
+                            }
                           }}
-                          className="text-red-600 hover:text-red-800"
+                          className="p-2 rounded hover:bg-red-50"
+                          aria-label={`Delete ${user.name}`}
                         >
-                          <FiTrash />
+                          <FiTrash className="text-red-600" />
                         </button>
                       </td>
                     </tr>
@@ -547,12 +399,225 @@ const AdminDashboard = () => {
               </table>
             </div>
           </div>
-        )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-900">Spacer Admin</h1>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 transition"
+              >
+                <FiExternalLink className="w-4 h-4" />
+                <span>View Site</span>
+              </button>
+              <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg">
+                <span className="text-sm text-gray-600">Admin:</span>
+                <span className="text-sm font-medium text-gray-900">{currentUser?.name || 'Admin User'}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-700 transition"
+              >
+                <FiLogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Page Title */}
+        <div className="mb-8">
+          <h2 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h2>
+          <p className="text-gray-600">Manage spaces, users, and bookings across the platform</p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-sm font-medium text-gray-600">Total Spaces</h3>
+            </div>
+            <p className="text-4xl font-bold text-gray-900 mb-2">{totalSpaces}</p>
+            <div className="text-sm text-gray-600">
+              <p>{activeSpaces} active</p>
+              <p>+{newSpacesThisMonth} this month</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-sm font-medium text-gray-600">Total Users</h3>
+            </div>
+            <p className="text-4xl font-bold text-gray-900 mb-2">{totalUsers}</p>
+            <div className="text-sm text-gray-600">
+              <p>{totalUsers} total</p>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-sm font-medium text-gray-600">Active Bookings</h3>
+            </div>
+            <p className="text-4xl font-bold text-gray-900 mb-2">{activeBookings}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-sm font-medium text-gray-600">Total Revenue</h3>
+            </div>
+            <p className="text-4xl font-bold text-gray-900 mb-2">KES {totalRevenue}</p>
+            <div className="text-sm text-gray-600">
+              <p>All-time</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-8">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <button
+              onClick={() => setShowSpaceModal(true)}
+              className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 transition text-left"
+            >
+              <FiPlus className="w-8 h-8 text-blue-600 mb-3" />
+              <h4 className="font-semibold text-gray-900 mb-1">Add Space</h4>
+              <p className="text-sm text-gray-600">Create new listing</p>
+            </button>
+
+            <button
+              onClick={() => setViewAllSpaces(true)}
+              className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 transition text-left"
+            >
+              <FiMapPin className="w-8 h-8 text-blue-600 mb-3" />
+              <h4 className="font-semibold text-gray-900 mb-1">Manage Spaces</h4>
+              <p className="text-sm text-gray-600">Edit & view spaces</p>
+            </button>
+
+            <button
+              onClick={() => setShowUserModal(true)}
+              className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 transition text-left"
+            >
+              <FiUsers className="w-8 h-8 text-blue-600 mb-3" />
+              <h4 className="font-semibold text-gray-900 mb-1">Add User</h4>
+              <p className="text-sm text-gray-600">Create user account</p>
+            </button>
+
+            <button
+              onClick={() => setViewAllUsers(true)}
+              className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 transition text-left"
+            >
+              <FiUsers className="w-8 h-8 text-blue-600 mb-3" />
+              <h4 className="font-semibold text-gray-900 mb-1">Manage Users</h4>
+              <p className="text-sm text-gray-600">View all users</p>
+            </button>
+          </div>
+        </div>
+
+        {/* Management Sections */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Space Management */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Space Management</h3>
+            <p className="text-sm text-gray-600 mb-6">Overview of all spaces on the platform</p>
+            
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-3xl font-bold text-gray-900 mb-1">{activeSpaces}</p>
+                <p className="text-sm text-gray-600">Active Spaces</p>
+                <p className="text-xs text-gray-500 mt-1">Ready for booking</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-gray-900 mb-1">{featuredSpaces}</p>
+                <p className="text-sm text-gray-600">Featured Spaces</p>
+                <p className="text-xs text-gray-500 mt-1">Highlighted listings</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setViewAllSpaces(true)}
+              className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              View All Spaces
+            </button>
+          </div>
+
+          {/* User Management */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">User Management</h3>
+            <p className="text-sm text-gray-600 mb-6">Platform user statistics</p>
+            
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-3xl font-bold text-gray-900 mb-1">{activeUsers}</p>
+                <p className="text-sm text-gray-600">Active Users</p>
+                <p className="text-xs text-gray-500 mt-1">Currently active</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-gray-900 mb-1">{newUsersThisMonth}</p>
+                <p className="text-sm text-gray-600">New This Month</p>
+                <p className="text-xs text-gray-500 mt-1">Recent signups</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setViewAllUsers(true)}
+              className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              View All Users
+            </button>
+          </div>
+        </div>
+
+        {/* Booking Management */}
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Booking Management</h3>
+          <p className="text-sm text-gray-600 mb-6">Recent and active bookings</p>
+          
+          {bookings.length === 0 ? (
+            <div className="text-center py-12">
+              <FiCalendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <p className="text-gray-600">No bookings yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {bookings.slice(0, 5).map((booking) => {
+                const space = spaces.find(s => s.id === booking.spaceId);
+                const user = users.find(u => u.id === booking.userId);
+                return (
+                  <div key={booking.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">{space?.name}</p>
+                      <p className="text-sm text-gray-600">{user?.name}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium text-gray-900">KES {booking.totalPrice}</p>
+                      <p className="text-sm text-gray-600">{new Date(booking.date).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Modals */}
       {showSpaceModal && <SpaceModal />}
       {showUserModal && <UserModal />}
+      {viewAllSpaces && <AllSpacesModal />}
+      {viewAllUsers && <AllUsersModal />}
     </div>
   );
 };
